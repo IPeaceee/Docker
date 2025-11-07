@@ -810,12 +810,8 @@ Third-party software có licenses riêng:
 
 ## 👥 Authors
 
-**Infrastructure Team**
-
 For questions or contributions:
-- 📧 Email: devops@yourdomain.com
-- 💬 Slack: #docker-templates
-- 🐛 Issues: GitHub Issues
+- 📧 Email: truongminhan9998@gmail.com
 
 ---
 
