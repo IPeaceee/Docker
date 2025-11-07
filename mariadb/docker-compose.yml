@@ -1,0 +1,288 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: aiara
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3306:3306"
+
+  mysql-inogrow:
+    image: mysql:latest
+    container_name: mysql-container-inogrow
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: inogrow
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+        # command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3308:3306"
+
+
+  mysql-timart:
+    image: mysql:latest
+    container_name: mysql-container-timart
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: timart
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+        # command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3309:3306"
+  mysql-dailyandco:
+    image: mysql:latest
+    container_name: mysql-container-dailyandco
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: dailyandco
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3311:3306"
+  mysql-picdot:
+    image: mysql:latest
+    container_name: mysql-container-picdot
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: picdot
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3313:3306"
+  mysql-ppm:
+    image: mysql:5.7.32
+    container_name: mysql-container-ppm
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: ppm
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone='+9:00'
+    ports:
+      - "3314:3306"
+  mysql-child:
+    image: mysql:latest
+    container_name: mysql-container-child
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: child
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3315:3306"
+  mysql-cclime:
+    image: mysql:latest
+    container_name: mysql-container-cclime
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: cclime
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3316:3306"
+  mysql-storebar:
+    image: mysql:latest
+    container_name: mysql-container-storebar
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: storebar
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3317:3306"
+  mysql-llink:
+    image: mysql:latest
+    container_name: mysql-container-llink
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: llink
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3319:3306"
+  mysql-karaoke:
+    image: mysql:latest
+    container_name: mysql-container-karaoke
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: coin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3321:3306"
+  mysql-onerx:
+    image: mysql:8.0.39
+    container_name: mysql-container-onerx
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: one_rx
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3322:3306"
+  mysql-pmen:
+    image: mysql:latest
+    container_name: mysql-container-pmen
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: formen
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3323:3306"
+  mysql-learning-crew:
+    image: mysql:latest
+    container_name: mysql-container-lcw
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: lcw
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3324:3306"
+  mysql-fanby:
+    image: mysql:8
+    container_name: mysql-container-fanbe
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: fanbe
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3325:3306"
+  mysql-maju:
+    image: mysql:latest
+    container_name: mysql-container-maju
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: storebar
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3326:3306"
+  mariadb-learning-crew:
+    image: mariadb:latest
+    container_name: mariadb-container-lcw
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: lcw
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiar8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3327:3306"
+
+  mysql-karaoke-live-dump:
+    image: mysql:8
+    container_name: mysql-container-karaoke-live-dump
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: coin
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3328:3306"
+  mysql-karaoke-live-final:
+    image: mysql:8
+    container_name: mysql-container-karaoke-live-final
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: karaoke
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3329:3306"
+
+  mariadb-echoloop:
+    image: mariadb:latest
+    container_name: mariadb-echoloop
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: echoloop
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiar8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3331:3306"
+
+  mysql-echoloop-dashboard:
+    image: mysql:8
+    container_name: mysql-echoloop-dashboard
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: echoloop-dashboard
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3332:3306"
+
+  mariadb-globi:
+    image: mariadb:latest
+    container_name: mariadb-globi
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: globi
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiar8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3333:3306"
+
+
+  mariadb-andamiro:
+    image: mariadb:latest
+    container_name: mariadb-andamiro
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: andamiro
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone='+09:00'
+    ports:
+      - "3334:3306"
+
+  mysql-fanbe:
+    image: mysql:latest
+    container_name: mysql-fanbe-staging
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: fanbe
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3335:3306"
+
+  
+  mysql-ai-lit-dev:
+    image: mysql:latest
+    container_name: mysql-ai-lit-dev
+    environment:
+      MYSQL_ROOT_PASSWORD: aiara8282
+      MYSQL_DATABASE: ai-lit
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: aiara8282
+    command: --default-time-zone=Asia/Seoul
+    ports:
+      - "3336:3306"

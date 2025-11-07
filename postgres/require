@@ -1,0 +1,213 @@
+Bạn là một DevOps/DBA nhiều kinh nghiệm. Hãy tạo một bộ triển khai PostgreSQL bằng Docker Compose, kèm README chi tiết, tối ưu cho dev và production.
+
+Yêu cầu đầu ra
+
+Trả về nhiều tệp trong một câu trả lời, mỗi tệp có tiêu đề ở dòng đầu tiên theo dạng:
+
+# file: docker-compose.yml
+
+# file: docker-compose.override.yml
+
+# file: .env.example
+
+# file: scripts/backup.sh
+
+# file: scripts/restore.sh
+
+# file: scripts/psql.sh
+
+# file: README.md
+
+Nội dung dùng YAML hợp lệ, Bash POSIX, và Markdown; không chèn placeholder kiểu <your-password>—thay bằng biến môi trường trong .env.example.
+
+Tất cả đường dẫn script dùng Unix LF; đặt quyền thực thi được nhắc trong README (chmod +x).
+
+Tiêu chí kỹ thuật bắt buộc
+1) Docker Compose
+
+Compose v2 (version không bắt buộc).
+
+Dùng profiles: dev và prod.
+
+Dịch vụ:
+
+postgres (bắt buộc)
+
+Ảnh: postgres:16
+
+Healthcheck: pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+
+restart: unless-stopped
+
+environment lấy từ .env
+
+volumes:
+
+dữ liệu: pg_data:/var/lib/postgresql/data
+
+init scripts (tùy chọn): ./initdb:/docker-entrypoint-initdb.d:ro
+
+shm_size: 1g
+
+logging với giới hạn kích thước (ví dụ max-size: "10m", max-file: "5").
+
+Cấu hình TZ.
+
+dev: expose port 5432:5432
+
+prod: không publish port; chỉ internal network.
+
+pgadmin (chỉ dev)
+
+Ảnh dpage/pgadmin4
+
+depends_on đợi postgres healthy
+
+Port 5050:80
+
+Lưu profile dev và có volume riêng pgadmin_data
+
+backup (chung, chạy theo lịch)
+
+Ảnh: ghcr.io/prodrigestivill/postgres-backup-local:16
+
+Backup hàng ngày vào ./backups (bind mount) hoặc volume pg_backups
+
+Biến môi trường: POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, SCHEDULE, BACKUP_KEEP_DAYS, BACKUP_KEEP_WEEKS, BACKUP_KEEP_MONTHS
+
+depends_on đợi postgres healthy
+
+README mô tả restore từ file .tar/.sql.gz
+
+psql-runner (one-shot utility)
+
+Entry point chạy psql dùng scripts/psql.sh; không tự start, chỉ để docker compose run --rm psql-runner ...
+
+depends_on dùng condition: service_healthy cho postgres.
+
+Tách network riêng db_net (internal), và chỉ service dev (pgadmin) publish port ra ngoài.
+
+Resource limits mẫu (cgroup) trong deploy.resources.limits (ghi chú: Swarm-only; README hướng dẫn thay bằng limit Docker/K8s khi cần).
+
+Secrets:
+
+Hỗ trợ tùy chọn đọc mật khẩu từ file (postgres_password.txt) qua Docker secrets; nếu không có thì dùng env var. README giải thích cả hai cách.
+
+2) .env.example
+
+Khai báo đầy đủ, có mô tả ngắn từng biến:
+
+POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+
+TZ
+
+PGDATA (nếu muốn đổi thư mục, mặc định để trống)
+
+Thông số backup: SCHEDULE="0 2 * * *", BACKUP_KEEP_DAYS=7, BACKUP_KEEP_WEEKS=4, BACKUP_KEEP_MONTHS=6
+
+PGADMIN_DEFAULT_EMAIL, PGADMIN_DEFAULT_PASSWORD (dev)
+
+Nhắc người dùng copy thành .env.
+
+3) Script vận hành (thư mục scripts/)
+
+backup.sh: ép chạy backup ngay (gọi container backup).
+
+restore.sh: restore vào DB mục tiêu từ file .tar/.sql.gz (đọc tham số file, db đích; kiểm tra an toàn).
+
+psql.sh: tiện ích chạy psql tương tác hoặc file .sql (ví dụ scripts/psql.sh -f migrations/001_init.sql).
+
+4) README.md (rõ ràng, có mục lục)
+
+Bắt buộc có các phần:
+
+Giới thiệu & tính năng
+
+Yêu cầu: Docker, Docker Compose, dung lượng đĩa, lưu ý SELinux/permissions.
+
+Cấu trúc thư mục (tree rút gọn).
+
+Thiết lập nhanh
+
+cp .env.example .env và điền biến
+
+Dev: docker compose --profile dev up -d
+
+Prod: docker compose --profile prod up -d (nêu rõ không mở port; kết nối qua app nội bộ hoặc SSH tunnel)
+
+Quản trị thường ngày
+
+Xem log, kiểm tra health, đổi mật khẩu, kết nối psql
+
+Backup/Restore
+
+Lịch backup, nơi lưu, cách đổi schedule
+
+Chạy backup thủ công
+
+Restore vào DB mới hoặc ghi đè (kèm cảnh báo)
+
+Nâng cấp phiên bản Postgres
+
+Minor: đổi tag image, rolling restart
+
+Major: khuyến nghị dump/restore; kèm checklist an toàn
+
+Bảo mật & best practices
+
+Không publish port ở prod
+
+Dùng secrets thay vì env khi có thể
+
+Phân quyền folder backup tối thiểu
+
+Sử dụng network internal, firewall
+
+Khắc phục sự cố phổ biến
+
+Permission denied trên volume (chown, uid/gid)
+
+Healthcheck fail (kiểm tra biến môi trường, log)
+
+Restore lỗi do encoding/extension
+
+Phụ lục
+
+Lệnh thường dùng (bảng cheat-sheet)
+
+Migrate dữ liệu giữa máy (rsync backups)
+
+5) Chất lượng & nhất quán
+
+Mọi lệnh đều chạy được trên Linux/macOS.
+
+Ví dụ lệnh có kiểm tra lỗi (set -euo pipefail) trong các script.
+
+Chú thích ngắn gọn trong YAML cho các khối quan trọng (healthcheck, volumes, profiles).
+
+README có mã ví dụ kết nối từ ứng dụng (chuỗi DATABASE_URL) cho dev và prod.
+
+Mẫu cấu trúc mong muốn (để Copilot bám theo)
+# file: docker-compose.yml
+# (nội dung)
+
+# file: docker-compose.override.yml
+# (nội dung)
+
+# file: .env.example
+# (nội dung)
+
+# file: scripts/backup.sh
+# (nội dung)
+
+# file: scripts/restore.sh
+# (nội dung)
+
+# file: scripts/psql.sh
+# (nội dung)
+
+# file: README.md
+# (nội dung)
+
+
+Hãy tạo đầy đủ các tệp trên với nội dung chi tiết, đúng chuẩn, và sẵn sàng chạy ngay sau khi người dùng điền .env.

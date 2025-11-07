@@ -1,0 +1,31 @@
+# Environment
+.env
+
+# Backups
+backups/*.sql
+backups/*.sql.gz
+backups/*.tar
+
+# Secrets
+*_password.txt
+*.key
+*.pem
+
+# Logs
+*.log
+
+# PgAdmin
+pgadmin_data/
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

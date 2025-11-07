@@ -1,0 +1,84 @@
+version: '3.8'
+
+networks:
+  rancher-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  rancher:
+    image: rancher/rancher:v2.8.5  # Use specific stable version for production
+    container_name: rancher-server
+    hostname: rancher-server
+    restart: unless-stopped
+    
+    # Network configuration
+    networks:
+      - rancher-network
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    # Environment variables for internal use
+    environment:
+      - CATTLE_SYSTEM_DEFAULT_REGISTRY=registry.rancher.com
+      - CATTLE_BOOTSTRAP_PASSWORD=${RANCHER_BOOTSTRAP_PASSWORD:-Admin123!}
+      - CATTLE_PASSWORD_MIN_LENGTH=8
+      - CATTLE_TLS_MIN_VERSION=1.2
+      - CATTLE_AGENT_IMAGE=rancher/rancher-agent:v2.8.5
+      - AUDIT_LEVEL=1
+      - AUDIT_LOG_MAXAGE=7
+      - AUDIT_LOG_MAXBACKUP=3
+      - AUDIT_LOG_MAXSIZE=50
+    
+    # Security configurations for internal use
+    privileged: true  # Required for Rancher to manage containers
+    # Note: For internal environments, privileged mode is acceptable
+    
+    # Resource limits for internal use
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    
+    # Volume mounts for internal use
+    volumes:
+      - rancher-data:/var/lib/rancher:Z
+      - rancher-log:/var/log/auditlog:Z
+      - /etc/localtime:/etc/localtime:ro
+    
+    # Health check for internal network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/ping"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        labels: "service=rancher"
+
+volumes:
+  rancher-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/rancher_data
+  rancher-log:
+    driver: local
+    driver_opts:
+      type: none  
+      o: bind
+      device: ${PWD}/rancher_logs

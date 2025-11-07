@@ -1,0 +1,49 @@
+# Environment files (contains sensitive information)
+.env
+.env.local
+.env.production
+.env.staging
+
+# Rancher data and logs
+rancher_data/
+rancher_logs/
+backups/
+
+# SSL certificates (if any)
+ssl-certs/
+*.crt
+*.key
+*.pem
+
+# Docker volumes data
+data/
+logs/
+
+# Backup files
+*.tar.gz
+*.zip
+rancher_backup_*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

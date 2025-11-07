@@ -1,0 +1,2 @@
+# Place your migration SQL scripts here
+# Execute with: docker compose run --rm psql-runner -f /migrations/your_migration.sql

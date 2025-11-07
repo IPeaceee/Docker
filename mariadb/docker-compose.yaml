@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  mariadb-echoloop-dashboard:
+    image: mariadb:10.11
+    container_name: mariadb-echoloop-dashboard
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}   
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      TZ: Asia/Seoul
+    command: >
+      --default-time-zone=Asia/Seoul
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb_flush_log_at_trx_commit=1
+      --sync_binlog=1
+      --lower_case_table_names=1             
+    ports:
+      - "3332:3306"
+    volumes:
+      - mariadb_echoloop_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/mariadb.conf.d/my.cnf:ro
+      - mariadb_logs:/var/log/mariadb 
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p\"$MARIADB_ROOT_PASSWORD\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mariadb_echoloop_data:
+  mariadb_logs:
