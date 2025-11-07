@@ -15,8 +15,10 @@ logs/
 *.db
 
 # Backups
+*.sql
 *.sql.gz
 *.dump
+backup_*.sql
 
 # OS files
 .DS_Store
