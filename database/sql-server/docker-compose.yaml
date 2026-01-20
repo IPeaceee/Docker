@@ -1,0 +1,30 @@
+networks:
+  sqlserver-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    container_name: sqlserver
+    restart: always
+
+    networks:
+      - sqlserver-network
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${SA_PASSWORD}
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+volumes:
+  sqlserver-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./sqlserver-data

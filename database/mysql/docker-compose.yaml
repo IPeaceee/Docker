@@ -1,0 +1,19 @@
+services:
+  mysql_bsd:
+    image: mysql:8.0
+    container_name: mysql-bsd
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PW}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PW}
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_bsd_data:/var/lib/mysql
+
+volumes:
+  mysql_bsd_data:
+    driver: local

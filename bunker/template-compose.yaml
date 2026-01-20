@@ -1,0 +1,94 @@
+services:
+  bunkerweb:
+    image: bunkerity/bunkerweb:1.5.9
+    ports:
+      - 80:8080
+      - 443:8443
+    labels:
+      - "bunkerweb.INSTANCE=yes"
+    environment:
+      - SERVER_NAME=dvwa.lab
+      - DATABASE_URI=mariadb+pymysql://bunkerweb:Passw0rd@bw-db:3306/db
+      - AUTOCONF_MODE=yes
+      - MULTISITE=yes
+      - API_WHITELIST_IP=127.0.0.0/8 192.168.255.0/24 10.20.30.0/24 0.0.0.0/0
+      - UI_HOST=http://bw-ui:7000
+      - USE_REVERSE_PROXY=yes
+      - REVERSE_PROXY_URL=/
+      - REVERSE_PROXY_HOST=http://192.168.255
+    networks:
+      - bw-universe
+      - bw-services
+
+  bw-autoconf:
+    image: bunkerity/bunkerweb-autoconf:1.5.9
+    depends_on:
+      - bunkerweb
+      - bw-docker
+    environment:
+      - DATABASE_URI=mariadb+pymysql://bunkerweb:Passw0rd@bw-db:3306/db
+      - AUTOCONF_MODE=yes
+      - DOCKER_HOST=tcp://bw-docker:2375
+    networks:
+      - bw-universe
+      - bw-docker
+
+  bw-scheduler:
+    image: bunkerity/bunkerweb-scheduler:1.5.9
+    depends_on:
+      - bunkerweb
+      - bw-docker
+    environment:
+      - DATABASE_URI=mariadb+pymysql://bunkerweb:Passw0rd@bw-db:3306/db
+      - DOCKER_HOST=tcp://bw-docker:2375
+      - AUTOCONF_MODE=yes
+    networks:
+      - bw-universe
+      - bw-docker
+
+  bw-docker:
+    image: tecnativa/docker-socket-proxy:nightly
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+      - LOG_LEVEL=warning
+    networks:
+      - bw-docker
+
+  bw-db:
+    image: mariadb:10.10
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=bunkerweb
+      - MYSQL_PASSWORD=Passw0rd
+    volumes:
+      - bw-data:/var/lib/mysql
+    networks:
+      - bw-docker
+  bw-ui:
+    image: bunkerity/bunkerweb-ui:1.5.9
+    networks:
+      bw-docker:
+      bw-universe:
+        aliases:
+          - bw-ui
+    environment:
+      - AUTOCONF_MODE=yes
+      - DOCKER_HOST=tcp://bw-docker:2375
+      - DATABASE_URI=mariadb+pymysql://bunkerweb:Passw0rd@bw-db:3306/db
+volumes:
+  bw-data:
+
+networks:
+  bw-universe:
+    name: bw-universe
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.20.30.0/24
+  bw-services:
+    name: bw-services
+  bw-docker:
+    name: bw-docker
