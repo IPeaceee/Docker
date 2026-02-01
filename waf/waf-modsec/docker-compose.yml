@@ -1,0 +1,22 @@
+# Chạy tất cả container của BTC
+name: waf-${TEAM}
+
+services:
+    waf:
+        build: .
+        image: waf-custom:latest
+        container_name: atkdef-waf-${TEAM}
+        ports:
+            # - "1${TEAM}:80"
+            - "80:80"
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - ./logs:/var/log/nginx
+            - ./logs/modsec_audit.log:/var/log/modsec_audit.log
+            - ./modsecurity/modsecurity.conf:/etc/nginx/modsecurity/modsecurity.conf
+            - ./modsecurity/unicode.mapping:/etc/nginx/modsecurity/unicode.mapping
+            - ./crs:/etc/nginx/crs
+        # Cho phép container gọi về host bằng tên host.docker.internal
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        restart: unless-stopped
